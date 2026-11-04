@@ -112,6 +112,9 @@ class MainActivity : ComponentActivity() {
 
     private fun openTetherSettings() {
         val candidates = listOf(
+            // Hidden but widely supported action. On Motorola Android 16 the class-name intent below
+            // opens the Settings home page instead of the tethering page.
+            Intent("android.settings.TETHER_SETTINGS"),
             Intent().setClassName("com.android.settings", "com.android.settings.Settings\$TetherSettingsActivity"),
             Intent().setClassName("com.android.settings", "com.android.settings.TetherSettings"),
             Intent(Settings.ACTION_WIRELESS_SETTINGS),
