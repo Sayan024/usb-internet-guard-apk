@@ -38,7 +38,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -581,12 +580,22 @@ private fun InfoRow(icon: ImageVector, label: String, value: String, on: Boolean
 private fun ChecklistCard(done: Set<String>, onToggle: (String, Boolean) -> Unit) {
     val passed = acceptanceTests.count { it.first in done }
     SectionCard(title = "Acceptance tests", trailing = "$passed / ${acceptanceTests.size}") {
-        LinearProgressIndicator(
-            progress = { passed / acceptanceTests.size.toFloat() },
-            modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        )
+        val progress by animateFloatAsState(passed / acceptanceTests.size.toFloat(), label = "testsProgress")
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(6.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+        ) {
+            Box(
+                Modifier
+                    .fillMaxWidth(progress)
+                    .fillMaxSize()
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary),
+            )
+        }
         Column {
             acceptanceTests.forEachIndexed { index, (id, text) ->
                 val checked = id in done
